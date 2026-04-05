@@ -17,18 +17,18 @@ import java.util.*;
  */
 public class WordleGame {
 
-    private String answer;
+    private final String answer;
     private int steps = 6;
-    private WordleDictionary dictionary;
+    private final WordleDictionary dictionary;
     private final PrintWriter logger;
     private boolean gameOver;
     private boolean won;
-    private List<String> guesses = new ArrayList<>();
-    private Set<Character> wrongLetters = new HashSet<>();
-    private Map<Integer, Character> correctLetters = new HashMap<>();
-    private Map<Integer, Character> misplacedLetters = new HashMap<>();
-    private Set<Character> requiredLetters = new HashSet<>();
-    private Set<String> usedHints = new HashSet<String>();
+    private final List<String> guesses = new ArrayList<>();
+    private final Set<Character> wrongLetters = new HashSet<>();
+    private final Map<Integer, Character> correctLetters = new HashMap<>();
+    private final Map<Integer, Character> misplacedLetters = new HashMap<>();
+    private final Set<Character> requiredLetters = new HashSet<>();
+    private final Set<String> usedHints = new HashSet<String>();
 
     public String getAnswer() {
         return answer;
@@ -135,7 +135,8 @@ public class WordleGame {
         possibleWords.removeAll(usedHints);
         if (possibleWords.isEmpty()) {
             possibleWords = dictionary.findPossibleWords(correctLetters, misplacedLetters, wrongLetters, requiredLetters);
-        } if (possibleWords.isEmpty()) {
+        }
+        if (possibleWords.isEmpty()) {
             String hint = dictionary.getRandomWord();
             usedHints.add(hint);
             logger.println("Подсказка (случайная): " + hint);
