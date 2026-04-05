@@ -150,15 +150,3 @@ public class WordleGame {
 }
 
 
-
-    class WordNotFoundException extends Exception {
-        public WordNotFoundException(String message) {
-            super(message);
-        }
-    }
-
-    class GameFinishedException extends Exception {
-        public GameFinishedException(String message) {
-            super(message);
-        }
-    }
