@@ -13,6 +13,7 @@ import java.util.List;
 public class WordleDictionaryLoader {
 
     private final String fileName;
+    private static final int WORD_LENGTH = 5;
 
     public WordleDictionaryLoader(String fileName) {
         this.fileName = fileName;
@@ -26,7 +27,7 @@ public class WordleDictionaryLoader {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.length() == 5) {
+                if (line.length() == WORD_LENGTH) {
                     words.add(line);
                 }
             }

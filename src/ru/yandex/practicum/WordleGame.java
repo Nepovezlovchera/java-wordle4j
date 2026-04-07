@@ -17,13 +17,14 @@ import java.util.*;
  */
 public class WordleGame {
 
-    private final String answer;
-    private int steps = 6;
+    private String answer;
+    private static final int WORD_LENGTH = 5;
+    private static final int MAX_ATTEMPTS = 6;
+    private int steps = MAX_ATTEMPTS;
     private final WordleDictionary dictionary;
     private final PrintWriter logger;
     private boolean gameOver;
     private boolean won;
-    private final List<String> guesses = new ArrayList<>();
     private final Set<Character> wrongLetters = new HashSet<>();
     private final Map<Integer, Character> correctLetters = new HashMap<>();
     private final Map<Integer, Character> misplacedLetters = new HashMap<>();
@@ -46,10 +47,6 @@ public class WordleGame {
         return won;
     }
 
-    public List<String> getGuesses() {
-        return guesses;
-    }
-
     public WordleGame(WordleDictionary dictionary, PrintWriter logger) {
         this.dictionary = dictionary;
         this.logger = logger;
@@ -63,11 +60,24 @@ public class WordleGame {
         this.dictionary = dictionary;
         this.logger = logger;
         this.answer = predefinedAnswer;
-        this.steps = 6;
+        this.steps = MAX_ATTEMPTS;
         this.gameOver = false;
         this.won = false;
 
         logger.println("Тестовая игра. Загадано слово: " + answer);
+    }
+
+    public void reset() {
+        this.answer = dictionary.getRandomWord();
+        this.steps = MAX_ATTEMPTS;
+        this.gameOver = false;
+        this.won = false;
+        this.wrongLetters.clear();
+        this.correctLetters.clear();
+        this.misplacedLetters.clear();
+        this.requiredLetters.clear();
+        this.usedHints.clear();
+        logger.println("Игра сброшена. Новое слово: " + answer);
     }
 
     public String makeGuess(String guess) throws WordNotFoundException, GameFinishedException,
@@ -81,14 +91,13 @@ public class WordleGame {
         if (guess.isBlank()) {
             throw new IllegalArgumentException("Введите слово, а не пустую строку");
         }
-        if (guess.length() != 5) {
+        if (guess.length() != WORD_LENGTH) {
             throw new IllegalArgumentException("Слово должно состоять из 5 букв");
         }
         if (!dictionary.contains(guess)) {
             throw new WordNotFoundException("Такого слова нет в словаре");
         }
         steps--;
-        guesses.add(guess);
         String result = WordleDictionary.compareWords(guess, answer);
         updateHintInfo(guess, result);
         if (guess.equals(answer)) {
@@ -132,8 +141,11 @@ public class WordleGame {
         }
 
         List<String> possibleWords = dictionary.findPossibleWords(correctLetters, misplacedLetters, wrongLetters, requiredLetters);
+
         possibleWords.removeAll(usedHints);
+
         if (possibleWords.isEmpty()) {
+            usedHints.clear();
             possibleWords = dictionary.findPossibleWords(correctLetters, misplacedLetters, wrongLetters, requiredLetters);
         }
         if (possibleWords.isEmpty()) {
